@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GitHub Events</title>
+    <script>
+        async function fetchEvents() {
+            const response = await fetch('/events');
+            const events = await response.json();
+            const eventList = document.getElementById('event-list');
+            eventList.innerHTML = '';
+
+            events.forEach(event => {
+                const listItem = document.createElement('li');
+                listItem.innerText = `${event.author} ${event.type} ${event.to_branch} on ${event.timestamp}`;
+                eventList.appendChild(listItem);
+            });
+        }
+
+        setInterval(fetchEvents, 15000);
+        window.onload = fetchEvents;
+    </script>
+</head>
+<body>
+    <h1>GitHub Events</h1>
+    <ul id="event-list"></ul>
+</body>
+</html>
