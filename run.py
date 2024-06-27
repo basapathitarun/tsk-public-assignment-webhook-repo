@@ -1,11 +1,17 @@
-from flask import request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template
+from pymongo import MongoClient
 from datetime import datetime
-from app.extensions import collection
-from app import create_app
 
-app = create_app()
+app = Flask(__name__)
 
+# MongoDB configuration
+client = MongoClient('mongodb://localhost:27017/')
+db = client['github_events']
+collection = db['events']
 
+@app.route('/ui', methods=['GET'])
+def ui():
+    return render_template('index.html')
 
 @app.route('/')
 def home():
@@ -75,11 +81,9 @@ def get_events():
         event['_id'] = str(event['_id'])
     return jsonify(events)
 
-@app.route('/Ui', methods=['GET'])
+@app.route('/ui', methods=['GET'])
 def ui():
     return render_template('index.html')
 
-
-
-if __name__ == '__main__': 
-    app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
